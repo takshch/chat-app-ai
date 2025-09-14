@@ -10,11 +10,12 @@ services:
     buildCommand: ""
     startCommand: ""
     healthCheckPath: /health
+    dockerBuildArgs:
+      - key: REACT_APP_API_URL
+        value: https://chat-app-ai-3pgp.onrender.com
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 4000
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
@@ -22,9 +23,9 @@ services:
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: CLIENT_URL
-        value: https://virallens.onrender.com
+        value: https://chat-app-ai-3pgp.onrender.com
       - key: COOKIE_DOMAIN
-        value: virallens.onrender.com
+        value: chat-app-ai-3pgp.onrender.com
       - key: COOKIE_SECURE
         value: true
       - key: COOKIE_SAME_SITE
