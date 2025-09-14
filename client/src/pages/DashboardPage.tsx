@@ -167,8 +167,8 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="flex h-screen bg-dark-bg">
       {/* Sidebar */}
-      <div className="w-80 bg-dark-sidebar border-r border-dark-border flex flex-col shadow-2xl">
-        <div className="p-6 border-b border-dark-border">
+      <div className="w-80 bg-dark-sidebar flex flex-col shadow-2xl">
+        <div className="p-6">
           <h2 className="text-xl font-semibold text-dark-text mb-4">ViralLens Chat</h2>
           <button 
             className="w-full bg-white text-black border border-gray-300 px-4 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 hover:bg-gray-100 hover:border-gray-400"
@@ -180,11 +180,12 @@ const DashboardPage: React.FC = () => {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto overflow-x-hidden m-1 py-2 max-h-[calc(100vh-200px)] scrollbar-thin scrollbar-thumb-dark-border scrollbar-track-transparent hover:scrollbar-thumb-dark-hover">
+        <span className="mx-3 font-medium">Chats</span>
+        <div className="flex-1 overflow-y-auto overflow-x-hidden m-1 pt-1 pb-2 max-h-[calc(100vh-200px)] scrollbar-thin scrollbar-thumb-dark-border scrollbar-track-transparent hover:scrollbar-thumb-dark-hover">
           {chats.map((chat) => (
             <div
               key={chat.id}
-              className={`m-1 px-2 py-3 rounded-md cursor-pointer transition-colors duration-200 hover:bg-dark-border/50 ${
+              className={`m-1 px-1.5 py-2 rounded-md cursor-pointer transition-colors duration-200 hover:bg-dark-border/50 ${
                 currentChat?.id === chat.id 
                   ? 'bg-dark-hover/30' 
                   : ''
@@ -216,7 +217,7 @@ const DashboardPage: React.FC = () => {
         {currentChat ? (
           <>
             {/* Chat Header */}
-            <div className="px-6 py-5 border-b border-dark-border bg-dark-sidebar">
+            <div className="px-6 py-5 bg-dark-sidebar">
               <h3 className="text-lg font-semibold text-dark-text">{currentChat.title}</h3>
             </div>
 
@@ -278,11 +279,9 @@ const DashboardPage: React.FC = () => {
               ))}
               {(isLoading || isCreatingChat) && (
                 <div className="flex flex-col max-w-[80%] self-start">
-                  <div className="px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-dark-message-assistant text-dark-text border border-dark-border rounded-bl-md">
-                    <div className="typing-indicator">
-                      <span></span>
-                      <span></span>
-                      <span></span>
+                  <div className="text-lg leading-relaxed break-words text-white">
+                    <div className="shining-text">
+                      Answering...
                     </div>
                   </div>
                 </div>

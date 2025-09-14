@@ -25,20 +25,47 @@
 }
 
 @layer components {
-  .typing-indicator {
-    @apply flex gap-1 items-center;
+  .spinning-svg {
+    animation: spinY 1s linear infinite;
+  }
+  
+  @keyframes spinY {
+    from {
+      transform: rotateY(0deg);
+    }
+    to {
+      transform: rotateY(360deg);
+    }
   }
 
-  .typing-indicator span {
-    @apply w-2 h-2 rounded-full bg-dark-text-secondary animate-pulse;
+  .shining-text {
+    background: linear-gradient(
+      90deg,
+      #666666 0%,
+      #999999 25%,
+      #ffffff 50%,
+      #999999 75%,
+      #666666 100%
+    );
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 2s ease-in-out infinite;
+    font-weight: 600;
+    font-size: 1.125rem;
   }
-
-  .typing-indicator span:nth-child(1) {
-    animation-delay: -0.32s;
-  }
-
-  .typing-indicator span:nth-child(2) {
-    animation-delay: -0.16s;
+  
+  @keyframes shine {
+    0% {
+      background-position: -200% 0;
+    }
+    50% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
   }
 }
 
