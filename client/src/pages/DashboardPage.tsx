@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { chatAPI } from '../services/api';
 import ChatBox from '../components/ChatBox';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import type { Chat, ChatListItem, Message } from '../types';
 
 const DashboardPage: React.FC = () => {
@@ -227,13 +229,46 @@ const DashboardPage: React.FC = () => {
                     message.role === 'user' ? 'self-end' : 'self-start'
                   }`}
                 >
-                  <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed break-words ${
-                    message.role === 'user'
-                      ? 'bg-dark-message-user text-white rounded-br-md'
-                      : 'bg-dark-message-assistant text-dark-text border border-dark-border rounded-bl-md'
-                  }`}>
-                    {message.content}
-                  </div>
+                  {message.role === 'user' ? (
+                    <div className="px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-dark-message-user text-white rounded-br-md">
+                      {message.content}
+                    </div>
+                  ) : (
+                    <div className="text-sm leading-relaxed break-words text-white">
+                      <div className="prose prose-invert prose-sm max-w-none">
+                        <ReactMarkdown 
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            p: ({ children }) => <p className="mb-2 last:mb-0 text-white">{children}</p>,
+                            ul: ({ children }) => <ul className="mb-2 last:mb-0 pl-4 text-white">{children}</ul>,
+                            ol: ({ children }) => <ol className="mb-2 last:mb-0 pl-4 text-white">{children}</ol>,
+                            li: ({ children }) => <li className="mb-1 text-white">{children}</li>,
+                            code: ({ children, className }) => {
+                              const isInline = !className;
+                              return isInline ? (
+                                <code className="bg-gray-700 text-gray-200 px-1 py-0.5 rounded text-xs">{children}</code>
+                              ) : (
+                                <code className="block bg-gray-800 text-gray-200 p-3 rounded-md text-xs overflow-x-auto">{children}</code>
+                              );
+                            },
+                            pre: ({ children }) => <pre className="mb-2 last:mb-0">{children}</pre>,
+                            blockquote: ({ children }) => <blockquote className="border-l-4 border-gray-400 pl-4 italic mb-2 last:mb-0 text-white">{children}</blockquote>,
+                            h1: ({ children }) => <h1 className="text-lg font-bold mb-2 text-white">{children}</h1>,
+                            h2: ({ children }) => <h2 className="text-base font-bold mb-2 text-white">{children}</h2>,
+                            h3: ({ children }) => <h3 className="text-sm font-bold mb-2 text-white">{children}</h3>,
+                            strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                            em: ({ children }) => <em className="italic text-white">{children}</em>,
+                            a: ({ children, href }) => <a href={href} className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
+                            table: ({ children }) => <table className="border-collapse border border-gray-400 mb-2 last:mb-0 text-white">{children}</table>,
+                            th: ({ children }) => <th className="border border-gray-400 px-2 py-1 bg-gray-700 text-left text-white">{children}</th>,
+                            td: ({ children }) => <td className="border border-gray-400 px-2 py-1 text-white">{children}</td>,
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                      </div>
+                    </div>
+                  )}
                   <div className={`text-xs text-dark-text-secondary mt-1 px-1 ${
                     message.role === 'user' ? 'text-right' : 'text-left'
                   }`}>
@@ -263,7 +298,7 @@ const DashboardPage: React.FC = () => {
         )}
 
         {/* Input Area */}
-        <div className="px-6 py-5 border-t border-dark-border bg-dark-sidebar">
+        <div className="px-6 py-5">
           <div className="max-w-4xl mx-auto">
             <ChatBox
               onSubmit={currentChat ? sendMessage : createNewChat}
