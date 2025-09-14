@@ -5,6 +5,10 @@ const connectDB = async (): Promise<void> => {
   try {
     const mongoURI = env.MONGODB_URI;
     
+    if (!mongoURI) {
+      throw new Error('⚠️ MONGODB_URI is not defined, skipping database connection');
+    }
+    
     await mongoose.connect(mongoURI);
     
     console.log('✅ MongoDB connected successfully');
@@ -12,7 +16,11 @@ const connectDB = async (): Promise<void> => {
     console.log(`🌐 Host: ${mongoose.connection.host}:${mongoose.connection.port}`);
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
-    process.exit(1);
+    console.warn('⚠️ Continuing without database connection for testing');
+    // Don't exit in test mode
+    if (env.NODE_ENV === 'production') {
+      process.exit(1);
+    }
   }
 };
 

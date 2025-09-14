@@ -25,10 +25,8 @@ export class LLMService {
   }
 
   private initialize() {
-    if (this.apiKey === null || this.model === null) {
-      this.apiKey = env.OPENROUTER_API_KEY;
-      this.model = env.OPENROUTER_MODEL;
-    }
+    this.apiKey = env.OPENROUTER_API_KEY || null;
+    this.model = env.OPENROUTER_MODEL;
   }
 
   async generateResponse(messages: LLMMessage[]): Promise<LLMResponse> {

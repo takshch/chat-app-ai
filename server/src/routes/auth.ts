@@ -104,7 +104,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
     // Set HTTP-only cookie with environment-based configuration
     res.cookie('authToken', token, {
       httpOnly: true,
-      secure: env.COOKIE_SECURE === 'true',
+      secure: env.COOKIE_SECURE,
       sameSite: env.COOKIE_SAME_SITE as 'lax' | 'strict' | 'none',
       domain: env.COOKIE_DOMAIN,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
@@ -135,7 +135,7 @@ router.post('/logout', authenticateToken, async (req: Request, res: Response): P
     // Clear the HTTP-only cookie
     res.clearCookie('authToken', {
       httpOnly: true,
-      secure: env.COOKIE_SECURE === 'true',
+      secure: env.COOKIE_SECURE,
       sameSite: env.COOKIE_SAME_SITE as 'lax' | 'strict' | 'none',
       domain: env.COOKIE_DOMAIN,
     });

@@ -165,8 +165,8 @@ docker system prune -f
 ## 🌐 Access Points
 
 - **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:3001
-- **Health Check**: http://localhost:3001/health
+- **Backend API**: http://localhost:4000
+- **Health Check**: http://localhost:4000/health
 
 ## 🔧 Configuration
 
@@ -202,6 +202,8 @@ The application uses MongoDB with the following collections:
 
 ## 🚀 Production Deployment
 
+### Local Production Deployment
+
 1. Set up MongoDB Atlas production cluster
 2. Update environment variables for production
 3. Build and deploy with Docker Compose:
@@ -209,6 +211,36 @@ The application uses MongoDB with the following collections:
 ```bash
 docker compose up -d
 ```
+
+### Render.com Deployment
+
+1. **Set up MongoDB Atlas production cluster**
+2. **Push your code to GitHub**
+3. **Connect to Render:**
+   - Go to [render.com](https://render.com)
+   - Connect your GitHub repository
+   - Create a new "Web Service"
+   - Select "Docker" as the environment
+   - Use the root `Dockerfile`
+
+4. **Configure Environment Variables in Render:**
+   ```
+   NODE_ENV=production
+   PORT=4000
+   MONGODB_URI=your-mongodb-atlas-connection-string
+   JWT_SECRET=your-super-secret-jwt-key
+   JWT_EXPIRES_IN=7d
+   CLIENT_URL=https://your-app-name.onrender.com
+   COOKIE_DOMAIN=your-app-name.onrender.com
+   COOKIE_SECURE=true
+   COOKIE_SAME_SITE=none
+   OPENROUTER_API_KEY=your-openrouter-api-key
+   OPENROUTER_MODEL=meta-llama/llama-3.2-3b-instruct:free
+   ```
+
+5. **Deploy:**
+   - Render will automatically build and deploy using the `Dockerfile`
+   - Your app will be available at `https://your-app-name.onrender.com`
 
 ## 📝 API Endpoints
 
