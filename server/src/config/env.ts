@@ -14,7 +14,7 @@ const schema = {
   // Database Configuration
   MONGODB_URI: {
     type: String,
-    default: 'mongodb://localhost:27017/virallens',
+    optional: false,
   },
 
   // JWT Configuration
@@ -49,7 +49,7 @@ const schema = {
   // OpenRouter Configuration
   OPENROUTER_API_KEY: {
     type: String,
-    default: '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',
+    optional: false,
   },
   OPENROUTER_MODEL: {
     type: String,
