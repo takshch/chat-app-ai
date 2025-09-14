@@ -3,7 +3,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { chatAPI } from '../services/api';
 import ChatBox from '../components/ChatBox';
 import type { Chat, ChatListItem, Message } from '../types';
-import './DashboardPage.css';
 
 const DashboardPage: React.FC = () => {
   const [chats, setChats] = useState<ChatListItem[]>([]);
@@ -164,13 +163,13 @@ const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="dashboard">
+    <div className="flex h-screen bg-dark-bg">
       {/* Sidebar */}
-      <div className="sidebar">
-        <div className="sidebar-header">
-          <h2>ViralLens Chat</h2>
+      <div className="w-80 bg-dark-sidebar border-r border-dark-border flex flex-col shadow-2xl">
+        <div className="p-6 border-b border-dark-border">
+          <h2 className="text-xl font-semibold text-dark-text mb-4">ViralLens Chat</h2>
           <button 
-            className="new-chat-button"
+            className="w-full bg-white text-black border border-gray-300 px-4 py-3 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 hover:bg-gray-100 hover:border-gray-400"
             onClick={() => {
               setCurrentChat(null);
             }}
@@ -179,58 +178,72 @@ const DashboardPage: React.FC = () => {
           </button>
         </div>
 
-        <div className="chats-list">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden m-1 py-2 max-h-[calc(100vh-200px)] scrollbar-thin scrollbar-thumb-dark-border scrollbar-track-transparent hover:scrollbar-thumb-dark-hover">
           {chats.map((chat) => (
             <div
               key={chat.id}
-              className={`chat-item ${currentChat?.id === chat.id ? 'active' : ''}`}
+              className={`m-1 px-2 py-3 rounded-md cursor-pointer transition-colors duration-200 hover:bg-dark-border/50 ${
+                currentChat?.id === chat.id 
+                  ? 'bg-dark-hover/30' 
+                  : ''
+              }`}
               onClick={() => loadChatHistory(chat.id)}
             >
-              <div className="chat-title">{chat.title}</div>
-              <div className="chat-date">
-                {new Date(chat.updatedAt).toLocaleDateString()}
+              <div className="font-medium text-gray-200 text-sm overflow-hidden text-ellipsis whitespace-nowrap leading-relaxed">
+                {chat.title}
               </div>
             </div>
           ))}
         </div>
 
-        <div className="sidebar-footer">
-          <div className="user-info">
+        <div className="p-6 flex flex-col gap-3">
+          <div className="text-sm text-dark-text-secondary font-medium">
             <span>{user?.name || user?.email}</span>
           </div>
-          <button className="logout-button" onClick={handleLogout}>
+          <button 
+            className="bg-white text-black border border-gray-300 px-4 py-2 rounded-md text-sm cursor-pointer transition-all duration-200 hover:bg-gray-100 hover:border-gray-400" 
+            onClick={handleLogout}
+          >
             Logout
           </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="main-content">
+      <div className="flex-1 flex flex-col bg-dark-bg">
         {currentChat ? (
           <>
             {/* Chat Header */}
-            <div className="chat-header">
-              <h3>{currentChat.title}</h3>
+            <div className="px-6 py-5 border-b border-dark-border bg-dark-sidebar">
+              <h3 className="text-lg font-semibold text-dark-text">{currentChat.title}</h3>
             </div>
 
             {/* Messages */}
-            <div className="messages-container">
+            <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-4">
               {currentChat.messages.map((message, index) => (
                 <div
                   key={index}
-                  className={`message ${message.role === 'user' ? 'user-message' : 'assistant-message'}`}
+                  className={`flex flex-col max-w-[80%] ${
+                    message.role === 'user' ? 'self-end' : 'self-start'
+                  }`}
                 >
-                  <div className="message-content">
+                  <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed break-words ${
+                    message.role === 'user'
+                      ? 'bg-dark-message-user text-white rounded-br-md'
+                      : 'bg-dark-message-assistant text-dark-text border border-dark-border rounded-bl-md'
+                  }`}>
                     {message.content}
                   </div>
-                  <div className="message-time">
+                  <div className={`text-xs text-dark-text-secondary mt-1 px-1 ${
+                    message.role === 'user' ? 'text-right' : 'text-left'
+                  }`}>
                     {new Date(message.timestamp).toLocaleTimeString()}
                   </div>
                 </div>
               ))}
               {(isLoading || isCreatingChat) && (
-                <div className="message assistant-message">
-                  <div className="message-content">
+                <div className="flex flex-col max-w-[80%] self-start">
+                  <div className="px-4 py-3 rounded-2xl text-sm leading-relaxed break-words bg-dark-message-assistant text-dark-text border border-dark-border rounded-bl-md">
                     <div className="typing-indicator">
                       <span></span>
                       <span></span>
@@ -243,15 +256,15 @@ const DashboardPage: React.FC = () => {
             </div>
           </>
         ) : (
-          <div className="welcome-screen">
-            <h2>Welcome to ViralLens Chat</h2>
-            <p>Start a new conversation by typing a message below.</p>
+          <div className="flex-1 flex flex-col items-center justify-center text-center p-10">
+            <h2 className="text-2xl font-semibold text-dark-text mb-3">Welcome to ViralLens Chat</h2>
+            <p className="text-dark-text-secondary text-base">Start a new conversation by typing a message below.</p>
           </div>
         )}
 
         {/* Input Area */}
-        <div className="input-area">
-          <div className="input-container">
+        <div className="px-6 py-5 border-t border-dark-border bg-dark-sidebar">
+          <div className="max-w-4xl mx-auto">
             <ChatBox
               onSubmit={currentChat ? sendMessage : createNewChat}
               placeholder={currentChat ? "Type your message..." : "Start a new conversation..."}

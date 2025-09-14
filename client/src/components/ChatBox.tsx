@@ -37,8 +37,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({
   };
 
   return (
-    <div className="chatbox-container">
-      <div className="chatbox-input-wrapper">
+    <div className="w-full">
+      <div className="relative w-full">
         <TextareaAutosize
           autoFocus={true}
           value={prompt}
@@ -46,18 +46,18 @@ const ChatBox: React.FC<ChatBoxProps> = ({
           onChange={onChange}
           disabled={disabled || isLoading}
           className={cn(
-            'chat-input',
+            'text-dark-text bg-dark-message-assistant border-2 border-dark-border rounded-xl px-4 py-3 pr-12 w-full shadow-sm overflow-hidden resize-none min-h-12 max-h-30 font-inherit text-sm leading-relaxed transition-all duration-200',
             disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''
           )}
           placeholder={placeholder}
         />
         <button
           type="button"
-          className="chat-send-button"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white text-black border border-gray-300 rounded-full w-8 h-8 cursor-pointer transition-all duration-200 flex items-center justify-center hover:bg-gray-100 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:border-gray-300"
           onClick={submitPrompt}
           disabled={!prompt.trim() || disabled || isLoading}
         >
-          <Send size={16} />
+          <Send size={14} className="text-black" />
         </button>
       </div>
     </div>
