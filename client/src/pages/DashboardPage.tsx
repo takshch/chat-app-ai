@@ -4,6 +4,7 @@ import { chatAPI } from '../services/api';
 import ChatBox from '../components/ChatBox';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Copy, Check } from 'lucide-react';
 import type { Chat, ChatListItem, Message } from '../types';
 
 const DashboardPage: React.FC = () => {
@@ -11,6 +12,7 @@ const DashboardPage: React.FC = () => {
   const [currentChat, setCurrentChat] = useState<Chat | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCreatingChat, setIsCreatingChat] = useState(false);
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   const { user, logout } = useAuth();
@@ -27,6 +29,16 @@ const DashboardPage: React.FC = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const copyToClipboard = async (text: string, messageId: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedMessageId(messageId);
+      setTimeout(() => setCopiedMessageId(null), 2000); // Reset after 2 seconds
+    } catch (error) {
+      console.error('Failed to copy text:', error);
+    }
   };
 
   const loadChats = async () => {
@@ -235,46 +247,68 @@ const DashboardPage: React.FC = () => {
                       {message.content}
                     </div>
                   ) : (
-                    <div className="text-sm leading-relaxed break-words text-white">
-                      <div className="prose prose-invert prose-sm max-w-none">
-                        <ReactMarkdown 
-                          remarkPlugins={[remarkGfm]}
-                          components={{
-                            p: ({ children }) => <p className="mb-2 last:mb-0 text-white">{children}</p>,
-                            ul: ({ children }) => <ul className="mb-2 last:mb-0 pl-4 text-white">{children}</ul>,
-                            ol: ({ children }) => <ol className="mb-2 last:mb-0 pl-4 text-white">{children}</ol>,
-                            li: ({ children }) => <li className="mb-1 text-white">{children}</li>,
-                            code: ({ children, className }) => {
-                              const isInline = !className;
-                              return isInline ? (
-                                <code className="bg-gray-700 text-gray-200 px-1 py-0.5 rounded text-xs">{children}</code>
-                              ) : (
-                                <code className="block bg-gray-800 text-gray-200 p-3 rounded-md text-xs overflow-x-auto">{children}</code>
-                              );
-                            },
-                            pre: ({ children }) => <pre className="mb-2 last:mb-0">{children}</pre>,
-                            blockquote: ({ children }) => <blockquote className="border-l-4 border-gray-400 pl-4 italic mb-2 last:mb-0 text-white">{children}</blockquote>,
-                            h1: ({ children }) => <h1 className="text-lg font-bold mb-2 text-white">{children}</h1>,
-                            h2: ({ children }) => <h2 className="text-base font-bold mb-2 text-white">{children}</h2>,
-                            h3: ({ children }) => <h3 className="text-sm font-bold mb-2 text-white">{children}</h3>,
-                            strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
-                            em: ({ children }) => <em className="italic text-white">{children}</em>,
-                            a: ({ children, href }) => <a href={href} className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
-                            table: ({ children }) => <table className="border-collapse border border-gray-400 mb-2 last:mb-0 text-white">{children}</table>,
-                            th: ({ children }) => <th className="border border-gray-400 px-2 py-1 bg-gray-700 text-left text-white">{children}</th>,
-                            td: ({ children }) => <td className="border border-gray-400 px-2 py-1 text-white">{children}</td>,
-                          }}
+                    <div className="group">
+                      <div className="text-sm leading-relaxed break-words text-white">
+                        <div className="prose prose-invert prose-sm max-w-none">
+                          <ReactMarkdown 
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              p: ({ children }) => <p className="mb-2 last:mb-0 text-white">{children}</p>,
+                              ul: ({ children }) => <ul className="mb-2 last:mb-0 pl-4 text-white">{children}</ul>,
+                              ol: ({ children }) => <ol className="mb-2 last:mb-0 pl-4 text-white">{children}</ol>,
+                              li: ({ children }) => <li className="mb-1 text-white">{children}</li>,
+                              code: ({ children, className }) => {
+                                const isInline = !className;
+                                return isInline ? (
+                                  <code className="bg-gray-700 text-gray-200 px-1 py-0.5 rounded text-xs">{children}</code>
+                                ) : (
+                                  <code className="block bg-gray-800 text-gray-200 p-3 rounded-md text-xs overflow-x-auto">{children}</code>
+                                );
+                              },
+                              pre: ({ children }) => <pre className="mb-2 last:mb-0">{children}</pre>,
+                              blockquote: ({ children }) => <blockquote className="border-l-4 border-gray-400 pl-4 italic mb-2 last:mb-0 text-white">{children}</blockquote>,
+                              h1: ({ children }) => <h1 className="text-lg font-bold mb-2 text-white">{children}</h1>,
+                              h2: ({ children }) => <h2 className="text-base font-bold mb-2 text-white">{children}</h2>,
+                              h3: ({ children }) => <h3 className="text-sm font-bold mb-2 text-white">{children}</h3>,
+                              strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                              em: ({ children }) => <em className="italic text-white">{children}</em>,
+                              a: ({ children, href }) => <a href={href} className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">{children}</a>,
+                              table: ({ children }) => <table className="border-collapse border border-gray-400 mb-2 last:mb-0 text-white">{children}</table>,
+                              th: ({ children }) => <th className="border border-gray-400 px-2 py-1 bg-gray-700 text-left text-white">{children}</th>,
+                              td: ({ children }) => <td className="border border-gray-400 px-2 py-1 text-white">{children}</td>,
+                            }}
+                          >
+                            {message.content}
+                          </ReactMarkdown>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between mt-1 px-1">
+                        <div className="text-xs text-dark-text-secondary">
+                          {new Date(message.timestamp).toLocaleTimeString()}
+                        </div>
+                        <button
+                          onClick={() => copyToClipboard(message.content, `${currentChat?.id}-${index}`)}
+                          className={`opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-md ${
+                            copiedMessageId === `${currentChat?.id}-${index}` 
+                              ? 'bg-black text-white hover:bg-gray-900' 
+                              : 'hover:bg-gray-800 text-gray-400 hover:text-white'
+                          }`}
+                          title="Copy message"
                         >
-                          {message.content}
-                        </ReactMarkdown>
+                          {copiedMessageId === `${currentChat?.id}-${index}` ? (
+                            <Check size={12} />
+                          ) : (
+                            <Copy size={12} />
+                          )}
+                        </button>
                       </div>
                     </div>
                   )}
-                  <div className={`text-xs text-dark-text-secondary mt-1 px-1 ${
-                    message.role === 'user' ? 'text-right' : 'text-left'
-                  }`}>
-                    {new Date(message.timestamp).toLocaleTimeString()}
-                  </div>
+                  {message.role === 'user' && (
+                    <div className="text-xs text-dark-text-secondary mt-1 px-1 text-right">
+                      {new Date(message.timestamp).toLocaleTimeString()}
+                    </div>
+                  )}
                 </div>
               ))}
               {(isLoading || isCreatingChat) && (

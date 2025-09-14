@@ -8,7 +8,6 @@ const SignupPage: React.FC = () => {
   const [formData, setFormData] = useState<SignupData>({
     email: '',
     password: '',
-    name: '',
   });
   const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,17 +58,6 @@ const SignupPage: React.FC = () => {
             </div>
           )}
 
-          <div className="form-group">
-            <label htmlFor="name">Name (Optional)</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter your name"
-            />
-          </div>
 
           <div className="form-group">
             <label htmlFor="email">Email</label>
