@@ -17,6 +17,11 @@ const DashboardPage: React.FC = () => {
   
   const { user, logout } = useAuth();
 
+  // Set page title
+  useEffect(() => {
+    document.title = 'YourAI Assistant';
+  }, []);
+
   // Load user's chats on component mount
   useEffect(() => {
     loadChats();

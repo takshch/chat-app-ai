@@ -19,6 +19,11 @@ const LoginPage: React.FC = () => {
   // Get success message from navigation state
   const successMessage = location.state?.message;
 
+  // Set page title
+  useEffect(() => {
+    document.title = 'Login';
+  }, []);
+
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
