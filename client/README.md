@@ -1,46 +1,94 @@
-# Getting Started with Create React App
+# ViralLens Chat Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React.js application with TypeScript for chatting with AI, featuring user authentication and a modern chat interface.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **User Authentication**: Sign up and login with email/password
+- **Chat Interface**: Create new chats and continue existing conversations
+- **Real-time Messaging**: Send messages and receive AI responses
+- **Chat History**: View and select from previous conversations
+- **Responsive Design**: Works on desktop and mobile devices
 
-### `npm start`
+## Pages
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 1. Sign Up Page (`/signup`)
+- Accepts email, password, and optional name
+- Redirects to login page after successful registration
+- Form validation and error handling
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 2. Login Page (`/login`)
+- Email and password authentication
+- Redirects to dashboard after successful login
+- Shows success message from signup if applicable
 
-### `npm test`
+### 3. Dashboard Page (`/dashboard`)
+- **Sidebar Section**:
+  - "Create Chat" button to start new conversations
+  - List of existing chats with titles and dates
+  - User info and logout button
+- **Main Section**:
+  - Current chat messages with scrollbar
+  - ChatGPT-style input box at the bottom
+  - Typing indicator for AI responses
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## API Integration
 
-### `npm run build`
+The application integrates with the following server endpoints:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Authentication
+- `POST /auth/signup` - User registration
+- `POST /auth/login` - User login
+- `POST /auth/logout` - User logout
+- `GET /auth/me` - Get current user
+- `GET /auth/verify` - Verify authentication token
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Chat
+- `POST /chat/create` - Create new chat
+- `POST /chat/send` - Send message to existing chat
+- `GET /chat/history/:chatId` - Get chat history
+- `GET /chat/chats` - Get user's chat list
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Getting Started
 
-### `npm run eject`
+1. Make sure the server is running on `http://localhost:3001`
+2. Install dependencies: `npm install`
+3. Start the development server: `npm start`
+4. Open `http://localhost:3000` in your browser
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Environment Variables
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Set the following environment variable:
+- `REACT_APP_API_URL`: Backend API URL (default: `http://localhost:3001`)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Technologies Used
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- React 19.1.1
+- TypeScript
+- React Router DOM
+- Axios for API calls
+- CSS3 for styling
+- Context API for state management
 
-## Learn More
+## Project Structure
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+src/
+├── components/
+│   └── ProtectedRoute.tsx
+├── contexts/
+│   └── AuthContext.tsx
+├── pages/
+│   ├── SignupPage.tsx
+│   ├── LoginPage.tsx
+│   ├── DashboardPage.tsx
+│   ├── AuthPages.css
+│   └── DashboardPage.css
+├── services/
+│   └── api.ts
+├── types/
+│   └── index.ts
+├── App.tsx
+├── App.css
+└── index.tsx
+```
